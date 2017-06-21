@@ -7,6 +7,7 @@ import sys
 import copy
 
 def ImageRetrainUnited(CsvFilepath):
+    student_count=0
     img=cv2.imread("img_united.png")
     pattern='.csv'
     for filename in os.listdir(CsvFilepath):
@@ -17,13 +18,19 @@ def ImageRetrainUnited(CsvFilepath):
             fp=open(CsvFilepath+filename)
             r=csv.reader(fp)
             for row in r:
-                box=[x,y,w,h]=[int(row[1]),int(row[2]),int(row[3]),int(row[4])]
+                box=[x,y,w,h]=[int(row[1]),int(row[2]),int(row[3]),int(row[4])]  
+                if w<30:
+                    continue
                 x=x+x_add
                 y=y+y_add
-                cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),1)
+                student_count+=1
+                cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),1)
             fp.close()
+    print 'the second count is:'+str(student_count)
+    with open('studentnumber_save.txt','a') as f:
+        f.write(str(student_count)+'\n')
     cv2.imshow("img_united_new",img)
-    cv2.imwrite("img_united.png",img)
+    cv2.imwrite("img_united_new.png",img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 

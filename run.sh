@@ -1,7 +1,14 @@
 #!/bin/bash
 thresh_val=0.2
-heigth_split_num=$1
-width_split_num=$2
+if [[ $# -lt 2 ]]; then
+    heigth_split_num=2
+    width_split_num=3
+else
+    heigth_split_num=$1
+    width_split_num=$2
+fi
+# echo $heigth_split_num
+# echo $width_split_num
 filenum=$[heigth_split_num*width_split_num/3]
 tmp=$[heigth_split_num*width_split_num-filenum*3]
 flag=1
@@ -28,8 +35,10 @@ filenum_txt=$[filenum_txt-1]
 count=1
 while(($count<=$filenum_txt))
 do
-	filename="Image_Retrain_txt/$count.txt"
-	Outfilename="ImageRetrain_results"
-	./darknet detect cfg/yolo.cfg yolo.weights $filename $Outfilename -thresh $thresh_val
-	let "count++"
+    filename="Image_Retrain_txt/$count.txt"
+    Outfilename="ImageRetrain_results"
+    ./darknet detect cfg/yolo.cfg yolo.weights $filename $Outfilename -thresh 0.2
+    let "count++"
 done
+python ImageRetrain_United.py
+python studentnumRead.py

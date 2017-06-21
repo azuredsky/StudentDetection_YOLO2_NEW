@@ -157,7 +157,9 @@ def Image_Retrain_Imwrite(studentImage_retrain):
         	fp=open(txt_path+str(flag)+'.txt','w')
         count+=1
         fp.write(filepath+'\n')
-        cv2.imwrite(filepath,img[y:y+h,x:x+w])
+        img_tmp=np.zeros((200,200,3),dtype=np.uint8)
+        img_tmp[:h,:w]=img[y:y+h,x:x+w]
+        cv2.imwrite(filepath,img_tmp)
     fp.close()
 
 def ImageUnited(ImagePath,heigth_split_num,width_split_num,piex_thresh):
@@ -172,6 +174,9 @@ def ImageUnited(ImagePath,heigth_split_num,width_split_num,piex_thresh):
     for filename in os.listdir('Student_Image_Split/'):
         if filename is not None:
             os.remove('Student_Image_Split/'+filename)
+    for filename in os.listdir('ImageRetrain_results/'):
+        if filename is not None:
+            os.remove('ImageRetrain_results/'+filename)
     for filename in os.listdir(ImagePath):
         #print filename
         match=re.search(pattern,filename)
@@ -209,12 +214,12 @@ def ImageUnited(ImagePath,heigth_split_num,width_split_num,piex_thresh):
                 cv2.rectangle(img_tmp,(x,y),(x+w,y+h),(0,0,255),1)
             BoxData_special[name_split]=BoxList
             cv2.imwrite(ImagePath+'rectangle'+filename,img_tmp)
-            cv2.imshow(Imagefilepath,img_tmp)
+            # cv2.imshow(Imagefilepath,img_tmp)
             img_united[i*(rows/heigth_split_num):(i+1)*(rows/heigth_split_num),j*(cols/width_split_num):(j+1)*(cols/width_split_num)]=img_tmp
     for ii in range(width_split_num-1):
-        cv2.line(img_united,(cols*(ii+1)/width_split_num,0),(cols*(ii+1)/width_split_num,rows),(255,0,0),1)
+        cv2.line(img_united,(cols*(ii+1)/width_split_num,0),(cols*(ii+1)/width_split_num,rows),(0,255,0),1)
     for jj in range(heigth_split_num-1):
-        cv2.line(img_united,(0,rows*(jj+1)/heigth_split_num),(cols,rows*(jj+1)/heigth_split_num),(255,0,0),1) 
+        cv2.line(img_united,(0,rows*(jj+1)/heigth_split_num),(cols,rows*(jj+1)/heigth_split_num),(0,255,0),1) 
 
     BoxData_special_return=BoxData_special_process(BoxData_special,rows,cols,heigth_split_num,width_split_num,piex_thresh)
     for key in BoxData_special_return:
@@ -242,11 +247,13 @@ def ImageUnited(ImagePath,heigth_split_num,width_split_num,piex_thresh):
             student_number+=1
             cv2.rectangle(img_united,(x,y),(x+w,y+h),(0,0,255),1)
     Image_Retrain_Imwrite(studentImage_retrain)
-    cv2.imshow('img_united.png',img_united)
-    print 'The number of student is:%d'%(student_number)
+    # cv2.imshow('img_united.png',img_united)
+    print 'The first count is:%d'%(student_number)
+    with open('studentnumber_save.txt','w') as f:
+        f.write(str(student_number)+'\n')
     cv2.imwrite('img_united.png',img_united)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
     return BoxData_special
 
 
