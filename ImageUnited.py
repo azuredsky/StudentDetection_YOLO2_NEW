@@ -130,18 +130,35 @@ def BoxList_united_process_x(BoxList_united):
 
 def Image_Retrain_Imwrite(studentImage_retrain):
     dir_path='Image_Retrain/'
+    txt_path='Image_Retrain_txt/'
+    count=1
+    flag=1
     if not os.path.exists(dir_path):
         os.mkdir(dir_path)
     else:
         for name in os.listdir(dir_path):
             os.remove(dir_path+name)
+    if not os.path.exists(txt_path):
+        os.mkdir(txt_path)
+    else:
+        for name in os.listdir(txt_path):
+            os.remove(txt_path+name)
     img=cv2.imread('data/1.JPG')
     (rows,cols)=img.shape[0:2]
+    fp=open(txt_path+str(flag)+'.txt','w')
     for box in studentImage_retrain:
         [x,y,w,h]=box
         filename=str(x)+'_'+str(y)+'.png'
         filepath=dir_path+filename
+        if count>3:
+        	count=1
+        	fp.close()
+        	flag+=1
+        	fp=open(txt_path+str(flag)+'.txt','w')
+        count+=1
+        fp.write(filepath+'\n')
         cv2.imwrite(filepath,img[y:y+h,x:x+w])
+    fp.close()
 
 def ImageUnited(ImagePath,heigth_split_num,width_split_num,piex_thresh):
     student_number=0

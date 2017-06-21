@@ -433,6 +433,7 @@ int main(int argc, char **argv)
         char *filename=NULL;
         char *file_tmp=NULL;
         char *filename_txt =argv[4];
+        char *Outfilename_txt =argv[5];
         FILE *fp=fopen(filename_txt,"r");
         char Outputfilename_tmp[256];
         char Inputfilename_tmp[256];
@@ -463,7 +464,7 @@ int main(int argc, char **argv)
         printf("in:%s\n",file_tmp);
         char *tmp=strtok(file_tmp,"/");
         tmp=strtok(NULL,".");
-        sprintf(Outputfilename_tmp,"results/%s",tmp); 
+        sprintf(Outputfilename_tmp,"%s/%s",Outfilename_txt,tmp); 
         //char *outfile = find_char_arg(argc, argv, "-out", 0);
         //strcat(Outputfilename_tmp,"\0");
         
